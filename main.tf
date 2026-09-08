@@ -13,8 +13,9 @@ module "vpc" {
 module "alb" {
   source = "./modules/alb"
 
-  name            = var.alb_name
-  vpc_id          = module.vpc.vpc_id
-  subnet_ids      = module.vpc.public_subnet_ids
-  certificate_arn = var.certificate_arn
+  name       = var.alb_name
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = module.vpc.public_subnet_ids
+
+  depends_on = [module.vpc]
 }
