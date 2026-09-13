@@ -38,6 +38,11 @@ output "target_group_name" {
   value       = aws_lb_target_group.this.name
 }
 
+output "target_group_port" {
+  description = "Port on which targets receive traffic"
+  value       = aws_lb_target_group.this.port
+}
+
 output "http_listener_arn" {
   description = "ARN of the HTTP listener"
   value       = aws_lb_listener.http.arn

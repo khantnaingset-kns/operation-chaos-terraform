@@ -29,6 +29,11 @@ variable "idle_timeout" {
   description = "Idle timeout in seconds"
   type        = number
   default     = 60
+
+  validation {
+    condition     = var.idle_timeout >= 1 && var.idle_timeout <= 4000 && var.idle_timeout == floor(var.idle_timeout)
+    error_message = "Idle timeout must be an integer between 1 and 4000 seconds."
+  }
 }
 
 
@@ -42,6 +47,11 @@ variable "target_group_port" {
   description = "Port on which targets receive traffic"
   type        = number
   default     = 80
+
+  validation {
+    condition     = var.target_group_port >= 1 && var.target_group_port <= 65535 && var.target_group_port == floor(var.target_group_port)
+    error_message = "Target group port must be an integer between 1 and 65535."
+  }
 }
 
 variable "target_group_protocol" {
