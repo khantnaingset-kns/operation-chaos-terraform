@@ -37,12 +37,6 @@ variable "idle_timeout" {
 }
 
 
-variable "ssl_policy" {
-  description = "SSL policy for the HTTPS listener"
-  type        = string
-  default     = "ELBSecurityPolicy-TLS13-1-2-2021-06"
-}
-
 variable "target_group_port" {
   description = "Port on which targets receive traffic"
   type        = number

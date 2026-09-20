@@ -1,5 +1,5 @@
 module "vpc" {
-  source = "./modules/vpc"
+  source = "../modules/vpc"
 
   vpc_name              = var.vpc_name
   cidr_block            = var.cidr_block
@@ -11,7 +11,7 @@ module "vpc" {
 }
 
 module "alb" {
-  source = "./modules/alb"
+  source = "../modules/alb"
 
   name              = var.alb_name
   vpc_id            = module.vpc.vpc_id
@@ -24,7 +24,7 @@ module "alb" {
 }
 
 module "autoscaling" {
-  source = "./modules/autoscaling"
+  source = "../modules/autoscaling"
 
   name                  = var.autoscaling_name
   vpc_id                = module.vpc.vpc_id
@@ -47,14 +47,14 @@ module "autoscaling" {
 }
 
 module "s3" {
-  source = "./modules/s3"
+  source = "../modules/s3"
 
   name = var.s3_name
   tags = var.s3_tags
 }
 
 module "redis" {
-  source = "./modules/redis"
+  source = "../modules/redis"
 
   name                     = var.redis_name
   vpc_id                   = module.vpc.vpc_id

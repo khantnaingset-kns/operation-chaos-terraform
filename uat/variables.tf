@@ -44,11 +44,6 @@ variable "alb_name" {
   type        = string
 }
 
-variable "certificate_arn" {
-  description = "ARN of the ACM certificate for the ALB HTTPS listener"
-  type        = string
-}
-
 variable "application_port" {
   description = "Port the websocket application listens on and the ALB forwards to"
   type        = number
