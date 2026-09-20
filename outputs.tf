@@ -47,3 +47,23 @@ output "redis_endpoint" {
   description = "Redis endpoint as <private-dns>:<port>"
   value       = module.redis.endpoint
 }
+
+output "s3_bucket_id" {
+  description = "ID (name) of the S3 bucket"
+  value       = module.s3.bucket_id
+}
+
+output "s3_bucket_arn" {
+  description = "ARN of the S3 bucket"
+  value       = module.s3.bucket_arn
+}
+
+output "redis_s3_gateway_endpoint_id" {
+  description = "ID of the S3 gateway VPC endpoint used by Redis"
+  value       = module.redis.s3_gateway_endpoint_id
+}
+
+output "redis_iam_role_arn" {
+  description = "ARN of the Redis EC2 IAM role"
+  value       = module.redis.iam_role_arn
+}

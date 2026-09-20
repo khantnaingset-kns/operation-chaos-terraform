@@ -32,3 +32,8 @@ output "nat_gateway_id" {
   description = "ID of the NAT gateway"
   value       = aws_nat_gateway.this.id
 }
+
+output "isolated_route_table_id" {
+  description = "ID of the isolated route table"
+  value       = aws_route_table.isolated.id
+}

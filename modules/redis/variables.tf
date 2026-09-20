@@ -23,6 +23,26 @@ variable "client_security_group_id" {
   type        = string
 }
 
+variable "route_table_id" {
+  description = "ID of the route table for the Redis subnet; the S3 gateway endpoint routes are added to it"
+  type        = string
+
+  validation {
+    condition     = can(regex("^rtb-[0-9a-f]+$", var.route_table_id))
+    error_message = "Route table ID must match the rtb-<hex> pattern."
+  }
+}
+
+variable "s3_bucket_arn" {
+  description = "ARN of the S3 bucket the Redis instance accesses through the gateway endpoint"
+  type        = string
+
+  validation {
+    condition     = can(regex("^arn:[a-z0-9-]+:s3:::[a-z0-9][a-z0-9.-]*[a-z0-9]$", var.s3_bucket_arn))
+    error_message = "S3 bucket ARN must be a valid bucket ARN such as arn:aws:s3:::bucket-name."
+  }
+}
+
 variable "ami_id" {
   description = "AMI ID for the Redis instance; must be an ARM64 image containing Redis"
   type        = string
@@ -56,7 +76,7 @@ variable "port" {
 }
 
 variable "user_data" {
-  description = "Plaintext user data for local-only instance bootstrap; the isolated subnet and Redis security group have no outbound access. Stored in Terraform state; do not include secrets."
+  description = "Plaintext user data for instance bootstrap; the Redis security group only allows outbound HTTPS to S3 through the gateway endpoint. Stored in Terraform state; do not include secrets."
   type        = string
   default     = null
   sensitive   = true

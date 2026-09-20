@@ -46,13 +46,22 @@ module "autoscaling" {
   depends_on = [module.vpc]
 }
 
+module "s3" {
+  source = "./modules/s3"
+
+  name = var.s3_name
+  tags = var.s3_tags
+}
+
 module "redis" {
   source = "./modules/redis"
 
   name                     = var.redis_name
   vpc_id                   = module.vpc.vpc_id
   subnet_id                = module.vpc.isolated_subnet_ids[0]
+  route_table_id           = module.vpc.isolated_route_table_id
   client_security_group_id = module.autoscaling.ec2_security_group_id
+  s3_bucket_arn            = module.s3.bucket_arn
 
   ami_id                     = var.redis_ami_id
   instance_type              = var.redis_instance_type
@@ -60,4 +69,46 @@ module "redis" {
   user_data                  = var.redis_user_data
   enable_detailed_monitoring = var.redis_enable_detailed_monitoring
   tags                       = var.redis_tags
+}
+
+resource "aws_s3_bucket_policy" "this" {
+  bucket = module.s3.bucket_id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "DenyDataAccessOutsideVpcEndpoint"
+        Effect    = "Deny"
+        Principal = { AWS = "*" }
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject",
+          "s3:AbortMultipartUpload",
+          "s3:ListMultipartUploadParts",
+          "s3:ListBucket",
+          "s3:ListBucketMultipartUploads",
+        ]
+        Resource = [module.s3.bucket_arn, "${module.s3.bucket_arn}/*"]
+        Condition = {
+          StringNotEquals = {
+            "aws:sourceVpce" = module.redis.s3_gateway_endpoint_id
+          }
+        }
+      },
+      {
+        Sid       = "DenyInsecureTransport"
+        Effect    = "Deny"
+        Principal = { AWS = "*" }
+        Action    = "s3:*"
+        Resource  = [module.s3.bucket_arn, "${module.s3.bucket_arn}/*"]
+        Condition = {
+          Bool = {
+            "aws:SecureTransport" = "false"
+          }
+        }
+      }
+    ]
+  })
 }
