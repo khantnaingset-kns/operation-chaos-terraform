@@ -10,7 +10,7 @@ terraform {
 
   backend "s3" {
     bucket       = "operation-chaos-tf-state-837411785224-ap-southeast-1-an"
-    key          = "terraform.tfstate"
+    key          = "dev/stacks/storage/terraform.tfstate"
     region       = "ap-southeast-1"
     use_lockfile = true
   }
